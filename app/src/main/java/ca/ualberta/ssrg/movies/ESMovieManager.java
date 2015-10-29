@@ -141,7 +141,7 @@ public class ESMovieManager {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-
+		
 
 		for (SearchHit<Movie> hit : esResponse.getHits().getHits()) {
 			result.add(hit.getSource());

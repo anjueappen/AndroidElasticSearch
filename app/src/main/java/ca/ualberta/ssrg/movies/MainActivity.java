@@ -4,11 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import ca.ualberta.ssrg.androidelasticsearch.R;
@@ -29,6 +32,17 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		movieList = (ListView) findViewById(R.id.movieList);
+
+        Button searchButton = (Button) findViewById(R.id.button1);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText textbox = (EditText) findViewById(R.id.editText1);
+
+                search(textbox);
+
+            }
+        });
 	}
 
 	@Override
@@ -71,10 +85,9 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		
-		
-		SearchThread thread = new SearchThread("*");
-
-		thread.start();
+		//You cannot access the network in the GUI thread
+		//so we create a separate search thread here to do the search work
+		//If we try to use the GUI thread , the gui will stop and wait -- BAD
 
 
 	}
@@ -99,10 +112,12 @@ public class MainActivity extends Activity {
 	 */
 	public void search(View view) {
 		movies.clear();
+        EditText t = (EditText) view;
+        SearchThread thread = new SearchThread(t.getText().toString());
 
-		// TODO: Extract search query from text view
-		
-		// TODO: Run the search thread
+        thread.start();
+
+        // TODO: Run the search thread
 		
 	}
 	
